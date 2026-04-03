@@ -82,11 +82,12 @@ const campanaSteps: boolean[] = (() => {
   return s;
 })();
 
-// Beat (tierra) — pulso en cada tiempo (t1, t2, t3, t4) de cada compás
-// t1 acento fuerte (steps 0, 8), resto suave
+// Beat (tierra) — pulso en cada tiempo (1, 2, 3, 4) del ciclo de 2 compases
+// Cada tiempo = 4 pasos en el grid → steps 0, 4, 8, 12
+// t1 del ciclo (step 0) = acento fuerte; resto = suave
 const beatSteps: boolean[] = (() => {
   const s = Array(16).fill(false);
-  [0, 2, 4, 6, 8, 10, 12, 14].forEach(i => (s[i] = true));
+  [0, 4, 8, 12].forEach(i => (s[i] = true));
   return s;
 })();
 

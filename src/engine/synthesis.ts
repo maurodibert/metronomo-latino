@@ -11,8 +11,8 @@ export function triggerPercussion(
 ): void {
   switch (type) {
     case 'beat':
-      // step % 8 === 0 → t1 de cada compás (pasos 0 y 8 en grid de 16)
-      triggerBeat(ctx, time, volume, step % 8 === 0);
+      // step 0 → t1 del ciclo (acento fuerte); resto = suave
+      triggerBeat(ctx, time, volume, step === 0);
       break;
     case 'click':
       triggerClave(ctx, time, volume);
