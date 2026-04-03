@@ -10,6 +10,7 @@ const SCHEDULE_AHEAD_S = 0.1;  // cuánto programa por adelantado (segundos)
 export interface SchedulerState {
   bpm: number;
   activePercussions: Set<string>;
+  volumes: Record<string, number>;
   patterns: PercussionPattern[];
   onBeat: (step: number) => void;
 }
@@ -83,7 +84,8 @@ export class MetronomeScheduler {
         pattern.steps[step] &&
         this.state.activePercussions.has(pattern.id)
       ) {
-        triggerPercussion(this.ctx, pattern.synthType, time, 1.0, step);
+        const vol = this.state.volumes[pattern.id] ?? 1.0;
+        triggerPercussion(this.ctx, pattern.synthType, time, vol, step);
       }
     }
   }

@@ -7,24 +7,36 @@ import './styles/main.css';
 
 const DEFAULT_BPM = 100;
 const DEFAULT_ACTIVE = new Set<string>(['beat', 'clave', 'conga']);
+const DEFAULT_VOLUME = 0.8;
+
+function buildDefaultVolumes(patterns: ReturnType<typeof buildPatterns>): Record<string, number> {
+  return Object.fromEntries(patterns.map(p => [p.id, DEFAULT_VOLUME]));
+}
 
 export default function App() {
   const [bpm, setBpm] = useState(DEFAULT_BPM);
   const [claveType, setClaveType] = useState<ClaveType>('2-3');
   const [activePercussions, setActivePercussions] = useState<Set<string>>(DEFAULT_ACTIVE);
   const [patterns, setPatterns] = useState(() => buildPatterns('2-3'));
+  const [volumes, setVolumes] = useState<Record<string, number>>(() => buildDefaultVolumes(buildPatterns('2-3')));
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(-1);
 
   const schedulerRef = useRef<MetronomeScheduler | null>(null);
 
   useEffect(() => {
-    setPatterns(buildPatterns(claveType));
+    const p = buildPatterns(claveType);
+    setPatterns(p);
+    setVolumes(prev => {
+      const next = { ...prev };
+      p.forEach(pat => { if (!(pat.id in next)) next[pat.id] = DEFAULT_VOLUME; });
+      return next;
+    });
   }, [claveType]);
 
   useEffect(() => {
-    schedulerRef.current?.updateState({ bpm, activePercussions, patterns });
-  }, [bpm, activePercussions, patterns]);
+    schedulerRef.current?.updateState({ bpm, activePercussions, volumes, patterns });
+  }, [bpm, activePercussions, volumes, patterns]);
 
   const handleBeatCallback = useCallback((step: number) => {
     setCurrentStep(step);
@@ -40,31 +52,32 @@ export default function App() {
       schedulerRef.current = new MetronomeScheduler({
         bpm,
         activePercussions,
+        volumes,
         patterns,
         onBeat: handleBeatCallback,
       });
       schedulerRef.current.start();
       setIsPlaying(true);
     }
-  }, [isPlaying, bpm, activePercussions, patterns, handleBeatCallback]);
+  }, [isPlaying, bpm, activePercussions, volumes, patterns, handleBeatCallback]);
 
   const togglePercussion = useCallback((id: string) => {
     setActivePercussions(prev => {
       const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
+      next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
+  }, []);
+
+  const setVolume = useCallback((id: string, v: number) => {
+    setVolumes(prev => ({ ...prev, [id]: v }));
   }, []);
 
   useEffect(() => {
     return () => schedulerRef.current?.stop();
   }, []);
 
-  const beat = currentStep >= 0 ? Math.floor(currentStep / 2) % 4 : -1;
+  const beat = currentStep >= 0 ? Math.floor(currentStep / 4) % 4 : -1;
 
   return (
     <div className="app">
@@ -103,7 +116,9 @@ export default function App() {
             pattern={pattern}
             active={activePercussions.has(pattern.id)}
             currentStep={currentStep}
+            volume={volumes[pattern.id] ?? DEFAULT_VOLUME}
             onToggle={() => togglePercussion(pattern.id as PercussionId)}
+            onVolumeChange={v => setVolume(pattern.id, v)}
           />
         ))}
       </div>

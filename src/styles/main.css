@@ -220,39 +220,52 @@ body {
   width: 100%;
 }
 
-.percussion-btn {
-  width: 100%;
+/* ---- Fila de percusión (toggle + knob) ---- */
+
+.percussion-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   background: var(--surface);
   border: 1px solid var(--surface-2);
   border-radius: var(--radius);
-  padding: 14px 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  padding: 10px 12px 10px 0;
   transition: border-color 0.15s, background 0.15s;
-  text-align: left;
 }
 
-.percussion-btn.active {
+.percussion-row.active {
   border-color: var(--accent);
   background: #1f1214;
 }
 
-.percussion-btn.hit {
+.percussion-row.hit {
   background: #2a1016;
+}
+
+/* Botón interno (label + grid) ocupa todo el espacio disponible */
+.percussion-toggle-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 4px 0 4px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  min-width: 0;
 }
 
 .percussion-label {
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--text-muted);
-  width: 60px;
+  width: 56px;
   flex-shrink: 0;
   transition: color 0.15s;
 }
 
-.percussion-btn.active .percussion-label {
+.percussion-row.active .percussion-label {
   color: var(--text);
 }
 
@@ -276,7 +289,7 @@ body {
   background: #555;
 }
 
-.percussion-btn.active .step.step-on {
+.percussion-row.active .step.step-on {
   background: var(--accent);
   opacity: 0.6;
 }
