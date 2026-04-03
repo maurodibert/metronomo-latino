@@ -27,7 +27,7 @@ export function PercussionToggle({ pattern, active, currentStep, volume, onToggl
 
   useEffect(() => { volumeModeRef.current = volumeMode; }, [volumeMode]);
 
-  // Listener nativo passive:false — necesario para preventDefault durante drag
+  // Listener nativo passive:false — necesario para preventDefault durante drag de volumen
   useEffect(() => {
     const el = rowRef.current;
     if (!el) return;
@@ -54,7 +54,7 @@ export function PercussionToggle({ pattern, active, currentStep, volume, onToggl
     if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null; }
   };
 
-  const handleTouchStart = (e: React.TouchEvent) => {
+  const handleRowTouchStart = (e: React.TouchEvent) => {
     didLongPress.current = false;
     touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     startVolume.current = volume;
@@ -64,16 +64,16 @@ export function PercussionToggle({ pattern, active, currentStep, volume, onToggl
     }, LONG_PRESS_MS);
   };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
+  const handleRowTouchEnd = (e: React.TouchEvent) => {
     cancelTimer();
-    if (!didLongPress.current) onToggle();
+    // El row ya NO hace toggle — eso es responsabilidad del checkbox
     e.preventDefault();
     setVolumeMode(false);
     didLongPress.current = false;
     touchStart.current = null;
   };
 
-  const handleTouchCancel = () => {
+  const handleRowTouchCancel = () => {
     cancelTimer();
     setVolumeMode(false);
     didLongPress.current = false;
@@ -85,16 +85,22 @@ export function PercussionToggle({ pattern, active, currentStep, volume, onToggl
   return (
     <div
       ref={rowRef}
-      role="button"
-      aria-pressed={active}
       className={`percussion-row ${active ? 'active' : ''} ${isHit ? 'hit' : ''} ${volumeMode ? 'volume-mode' : ''}`}
-      onClick={onToggle}              // desktop: click normal
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      onTouchCancel={handleTouchCancel}
+      onTouchStart={handleRowTouchStart}
+      onTouchEnd={handleRowTouchEnd}
+      onTouchCancel={handleRowTouchCancel}
       onContextMenu={e => e.preventDefault()}
     >
-      {/* Div en lugar de button para evitar que iOS cancele el touch en long press */}
+      {/* Checkbox — única responsable del toggle */}
+      <div
+        className={`percussion-checkbox ${active ? 'checked' : ''}`}
+        role="checkbox"
+        aria-checked={active}
+        onClick={onToggle}
+        onTouchStart={e => e.stopPropagation()}
+        onTouchEnd={e => { e.stopPropagation(); e.preventDefault(); onToggle(); }}
+      />
+
       <div className="percussion-toggle-btn">
         <span className="percussion-label">{pattern.label}</span>
         <div className="step-grid">

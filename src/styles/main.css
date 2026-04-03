@@ -229,12 +229,30 @@ body {
   background: var(--surface);
   border: 1px solid var(--surface-2);
   border-radius: var(--radius);
-  padding: 10px 12px 10px 0;
+  padding: 10px 12px;
   transition: border-color 0.15s, background 0.15s;
   /* Prevenir selección de texto e iOS callout en long press */
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
+}
+
+/* ---- Checkbox de activación ---- */
+
+.percussion-checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #555;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.percussion-checkbox.checked {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 6px rgba(200, 16, 46, 0.5);
 }
 
 .percussion-row.active {
@@ -246,17 +264,12 @@ body {
   background: #2a1016;
 }
 
-/* Botón interno (label + grid) ocupa todo el espacio disponible */
+/* Contenido interno (label + grid) ocupa todo el espacio disponible */
 .percussion-toggle-btn {
   flex: 1;
-  background: none;
-  border: none;
-  padding: 4px 0 4px 16px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 14px;
-  text-align: left;
   min-width: 0;
 }
 
