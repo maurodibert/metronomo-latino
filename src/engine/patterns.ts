@@ -47,38 +47,43 @@ export function getClavePattern(type: ClaveType): boolean[] {
   return steps;
 }
 
-// Tumbao de conga (patrón simplificado)
+// Tumbao de conga — patrón básico (fuente: scphillips.com)
+// 8 pasos que se repiten: [null,null,RS,null,null,null,RO,RO]
+// RS = slap derecha, RO = open derecha
 const congaSteps: boolean[] = (() => {
   const s = Array(16).fill(false);
-  [2, 5, 7, 10, 12, 14].forEach(i => (s[i] = true));
+  [2, 6, 7, 10, 14, 15].forEach(i => (s[i] = true));
   return s;
 })();
 
-// Bongó martillo (corcheas con acentos)
+// Bongó martillo — patrón estándar (sin referencia directa en el sitio)
 const bongoSteps: boolean[] = (() => {
   const s = Array(16).fill(false);
   [0, 2, 4, 5, 6, 8, 10, 12, 14].forEach(i => (s[i] = true));
   return s;
 })();
 
-// Timbal (shell/cáscara)
+// Timbal — cáscara (fuente: scphillips.com)
+// [X,null,X,X,null,X,null,X, X,null,X,null,X,X,null,X]
 const timbalSteps: boolean[] = (() => {
   const s = Array(16).fill(false);
-  [0, 2, 4, 6, 8, 10, 12, 14].forEach(i => (s[i] = true));
+  [0, 2, 3, 5, 7, 8, 10, 12, 13, 15].forEach(i => (s[i] = true));
   return s;
 })();
 
-// Güiro (hacia adelante en 1 y 3, corto en 2 y 4)
+// Güiro — patrón de 4 pasos que se repite (fuente: scphillips.com)
+// [long, null, short, short] × 4 → largo en t1 y t3, dos cortos al final de cada grupo
 const guiroSteps: boolean[] = (() => {
   const s = Array(16).fill(false);
-  [0, 2, 4, 6, 8, 10, 12, 14].forEach(i => (s[i] = true));
+  [0, 2, 3, 4, 6, 7, 8, 10, 11, 12, 14, 15].forEach(i => (s[i] = true));
   return s;
 })();
 
-// Campana (cencerro) — patrón mambo
+// Campana (cencerro) — patrón complejo (fuente: scphillips.com)
+// [accent,null,X,X, accent,null,X,X, accent,null,soft,null, accent,null,X,X]
 const campanaSteps: boolean[] = (() => {
   const s = Array(16).fill(false);
-  [0, 3, 6, 8, 11, 14].forEach(i => (s[i] = true));
+  [0, 2, 3, 4, 6, 7, 8, 10, 12, 14, 15].forEach(i => (s[i] = true));
   return s;
 })();
 
