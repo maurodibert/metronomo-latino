@@ -6,7 +6,7 @@ import { PercussionToggle } from './components/PercussionToggle';
 import './styles/main.css';
 
 const DEFAULT_BPM = 100;
-const DEFAULT_ACTIVE = new Set<string>(['clave', 'conga']);
+const DEFAULT_ACTIVE = new Set<string>(['beat', 'clave', 'conga']);
 
 export default function App() {
   const [bpm, setBpm] = useState(DEFAULT_BPM);

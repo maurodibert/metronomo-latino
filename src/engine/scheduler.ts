@@ -83,7 +83,7 @@ export class MetronomeScheduler {
         pattern.steps[step] &&
         this.state.activePercussions.has(pattern.id)
       ) {
-        triggerPercussion(this.ctx, pattern.synthType, time);
+        triggerPercussion(this.ctx, pattern.synthType, time, 1.0, step);
       }
     }
   }

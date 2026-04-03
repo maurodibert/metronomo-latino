@@ -1,14 +1,19 @@
 // Síntesis de percusiones usando Web Audio API pura (sin samples)
 
-type SynthType = 'click' | 'conga' | 'bongo' | 'rimshot' | 'scrape' | 'bell';
+type SynthType = 'beat' | 'click' | 'conga' | 'bongo' | 'rimshot' | 'scrape' | 'bell';
 
 export function triggerPercussion(
   ctx: AudioContext,
   type: SynthType,
   time: number,
-  volume = 1.0
+  volume = 1.0,
+  step = 0
 ): void {
   switch (type) {
+    case 'beat':
+      // step % 8 === 0 → t1 de cada compás (pasos 0 y 8 en grid de 16)
+      triggerBeat(ctx, time, volume, step % 8 === 0);
+      break;
     case 'click':
       triggerClave(ctx, time, volume);
       break;
@@ -30,6 +35,25 @@ export function triggerPercussion(
   }
 }
 
+function triggerBeat(ctx: AudioContext, time: number, vol: number, accent: boolean) {
+  // Acento (t1): click agudo, más fuerte
+  // Normal (t2, t3, t4): click más suave y corto
+  const freq = accent ? 1800 : 1000;
+  const amp = accent ? vol * 0.9 : vol * 0.45;
+  const decay = accent ? 0.06 : 0.04;
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.frequency.setValueAtTime(freq, time);
+  osc.frequency.exponentialRampToValueAtTime(freq * 0.5, time + decay);
+  gain.gain.setValueAtTime(amp, time);
+  gain.gain.exponentialRampToValueAtTime(0.001, time + decay);
+  osc.start(time);
+  osc.stop(time + decay + 0.01);
+}
+
 function triggerClave(ctx: AudioContext, time: number, vol: number) {
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
@@ -44,7 +68,6 @@ function triggerClave(ctx: AudioContext, time: number, vol: number) {
 }
 
 function triggerConga(ctx: AudioContext, time: number, vol: number) {
-  // Golpe abierto de conga: tono bajo con pitch envelope
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
   osc.connect(gain);
@@ -57,7 +80,6 @@ function triggerConga(ctx: AudioContext, time: number, vol: number) {
   osc.start(time);
   osc.stop(time + 0.26);
 
-  // Ataque con ruido
   triggerNoiseBurst(ctx, time, 0.05, vol * 0.3);
 }
 
@@ -76,7 +98,6 @@ function triggerBongo(ctx: AudioContext, time: number, vol: number) {
 }
 
 function triggerTimbal(ctx: AudioContext, time: number, vol: number) {
-  // Cáscara: sonido seco de madera/metal
   triggerNoiseBurst(ctx, time, 0.03, vol * 0.6);
 
   const osc = ctx.createOscillator();
@@ -93,7 +114,6 @@ function triggerTimbal(ctx: AudioContext, time: number, vol: number) {
 }
 
 function triggerGuiro(ctx: AudioContext, time: number, vol: number) {
-  // Raspado: ruido filtrado con barrido de frecuencia
   const bufferSize = ctx.sampleRate * 0.1;
   const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
   const data = buffer.getChannelData(0);
@@ -119,7 +139,6 @@ function triggerGuiro(ctx: AudioContext, time: number, vol: number) {
 }
 
 function triggerCampana(ctx: AudioContext, time: number, vol: number) {
-  // Cencerro: tono metálico con inarmónicos
   const freqs = [800, 1200, 1800, 2400];
   freqs.forEach((freq, i) => {
     const osc = ctx.createOscillator();

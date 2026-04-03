@@ -3,6 +3,7 @@
 // Cada índice representa una corchea: 0=tiempo1, 1=tiempo1+, 2=tiempo2, etc.
 
 export type PercussionId =
+  | 'beat'
   | 'clave'
   | 'conga'
   | 'bongo'
@@ -17,7 +18,7 @@ export interface PercussionPattern {
   label: string;
   steps: boolean[];
   // Para síntesis: tipo de sonido
-  synthType: 'click' | 'conga' | 'bongo' | 'rimshot' | 'scrape' | 'bell';
+  synthType: 'beat' | 'click' | 'conga' | 'bongo' | 'rimshot' | 'scrape' | 'bell';
 }
 
 // Son Clave estándar — 5 golpes sobre 2 compases en corcheas (16 pasos)
@@ -25,21 +26,21 @@ export interface PercussionPattern {
 //
 // 3-2: 3 golpes en compás 1, 2 golpes en compás 2
 //   Compás 1: t1(0), t2+(3), t4(6)
-//   Compás 2: t2+(11), t4(14)
-//   Pasos: [0, 3, 6, 11, 14]
-//   Grilla: [X . . X][. . X .][. . . X][. . X .]
+//   Compás 2: t3(12), t4(14)
+//   Pasos: [0, 3, 6, 12, 14]
+//   Grilla: [X . . X][. . X .][. . . .][X . X .]
 //
 // 2-3: 2 golpes en compás 1, 3 golpes en compás 2 (= 3-2 empezando en compás 2)
-//   Compás 1: t2+(3), t4(6)
+//   Compás 1: t3(4), t4(6)
 //   Compás 2: t1(8), t2+(11), t4(14)
-//   Pasos: [3, 6, 8, 11, 14]
-//   Grilla: [. . . X][. . X .][X . . X][. . X .]
+//   Pasos: [4, 6, 8, 11, 14]
+//   Grilla: [. . . .][X . X .][X . . X][. . X .]
 export function getClavePattern(type: ClaveType): boolean[] {
   const steps = Array(16).fill(false);
   if (type === '3-2') {
-    [0, 3, 6, 11, 14].forEach(i => (steps[i] = true));
+    [0, 3, 6, 12, 14].forEach(i => (steps[i] = true));
   } else {
-    [3, 6, 8, 11, 14].forEach(i => (steps[i] = true));
+    [4, 6, 8, 11, 14].forEach(i => (steps[i] = true));
   }
   return steps;
 }
@@ -79,7 +80,16 @@ const campanaSteps: boolean[] = (() => {
   return s;
 })();
 
+// Beat (tierra) — pulso en cada tiempo (t1, t2, t3, t4) de cada compás
+// t1 acento fuerte (steps 0, 8), resto suave
+const beatSteps: boolean[] = (() => {
+  const s = Array(16).fill(false);
+  [0, 2, 4, 6, 8, 10, 12, 14].forEach(i => (s[i] = true));
+  return s;
+})();
+
 export const DEFAULT_PATTERNS: Omit<PercussionPattern, 'steps'>[] = [
+  { id: 'beat', label: 'Beat', synthType: 'beat' },
   { id: 'clave', label: 'Clave', synthType: 'click' },
   { id: 'conga', label: 'Conga', synthType: 'conga' },
   { id: 'bongo', label: 'Bongó', synthType: 'bongo' },
@@ -90,6 +100,7 @@ export const DEFAULT_PATTERNS: Omit<PercussionPattern, 'steps'>[] = [
 
 export function buildPatterns(claveType: ClaveType): PercussionPattern[] {
   const stepsMap: Record<PercussionId, boolean[]> = {
+    beat: beatSteps,
     clave: getClavePattern(claveType),
     conga: congaSteps,
     bongo: bongoSteps,
