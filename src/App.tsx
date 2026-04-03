@@ -42,7 +42,7 @@ export default function App() {
     setCurrentStep(step);
   }, []);
 
-  const togglePlay = useCallback(() => {
+  const togglePlay = useCallback(async () => {
     if (isPlaying) {
       schedulerRef.current?.stop();
       schedulerRef.current = null;
@@ -56,7 +56,7 @@ export default function App() {
         patterns,
         onBeat: handleBeatCallback,
       });
-      schedulerRef.current.start();
+      await schedulerRef.current.start();
       setIsPlaying(true);
     }
   }, [isPlaying, bpm, activePercussions, volumes, patterns, handleBeatCallback]);

@@ -34,9 +34,14 @@ export class MetronomeScheduler {
     return this.timerID !== null;
   }
 
-  start() {
+  async start() {
     if (this.isRunning) return;
     this.ctx = new AudioContext();
+    // iOS/Safari suspende el contexto hasta que se reanuda explícitamente
+    // dentro de un gesto del usuario
+    if (this.ctx.state === 'suspended') {
+      await this.ctx.resume();
+    }
     this.currentStep = 0;
     this.nextNoteTime = this.ctx.currentTime + 0.05;
     this.schedule();
