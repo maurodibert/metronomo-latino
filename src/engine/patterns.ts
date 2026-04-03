@@ -20,24 +20,26 @@ export interface PercussionPattern {
   synthType: 'click' | 'conga' | 'bongo' | 'rimshot' | 'scrape' | 'bell';
 }
 
-// Son Clave — 5 golpes sobre 2 compases en corcheas (16 pasos)
-// Cada paso = 1 corchea: 0=t1, 1=t1+, 2=t2, 3=t2+, 4=t3, 5=t3+, 6=t4, 7=t4+ (x2 compases)
+// Son Clave estándar — 5 golpes sobre 2 compases en corcheas (16 pasos)
+// Cada paso = 1 corchea: 0=t1, 1=t1+, 2=t2, 3=t2+, 4=t3, 5=t3+, 6=t4, 7=t4+ (por compás)
 //
 // 3-2: 3 golpes en compás 1, 2 golpes en compás 2
 //   Compás 1: t1(0), t2+(3), t4(6)
-//   Compás 2: t1+(9), t3(12)
-//   Pasos: [0, 3, 6, 9, 12]
+//   Compás 2: t2+(11), t4(14)
+//   Pasos: [0, 3, 6, 11, 14]
+//   Grilla: [X . . X][. . X .][. . . X][. . X .]
 //
 // 2-3: 2 golpes en compás 1, 3 golpes en compás 2 (= 3-2 empezando en compás 2)
-//   Compás 1: t1+(1), t3(4)
+//   Compás 1: t2+(3), t4(6)
 //   Compás 2: t1(8), t2+(11), t4(14)
-//   Pasos: [1, 4, 8, 11, 14]
+//   Pasos: [3, 6, 8, 11, 14]
+//   Grilla: [. . . X][. . X .][X . . X][. . X .]
 export function getClavePattern(type: ClaveType): boolean[] {
   const steps = Array(16).fill(false);
   if (type === '3-2') {
-    [0, 3, 6, 9, 12].forEach(i => (steps[i] = true));
+    [0, 3, 6, 11, 14].forEach(i => (steps[i] = true));
   } else {
-    [1, 4, 8, 11, 14].forEach(i => (steps[i] = true));
+    [3, 6, 8, 11, 14].forEach(i => (steps[i] = true));
   }
   return steps;
 }

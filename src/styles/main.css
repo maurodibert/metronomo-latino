@@ -281,6 +281,11 @@ body {
   opacity: 0.6;
 }
 
+.step.step-beat-start {
+  margin-left: 5px;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+}
+
 .step.step-current {
   background: var(--hit) !important;
   opacity: 1 !important;

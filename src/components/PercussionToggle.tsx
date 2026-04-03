@@ -21,7 +21,7 @@ export function PercussionToggle({ pattern, active, currentStep, onToggle }: Pro
         {pattern.steps.map((on, i) => (
           <div
             key={i}
-            className={`step ${on ? 'step-on' : ''} ${i === currentStep && active ? 'step-current' : ''}`}
+            className={`step ${on ? 'step-on' : ''} ${i === currentStep && active ? 'step-current' : ''} ${i % 4 === 0 && i !== 0 ? 'step-beat-start' : ''}`}
           />
         ))}
       </div>
