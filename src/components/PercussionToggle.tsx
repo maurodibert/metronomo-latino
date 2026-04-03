@@ -87,6 +87,7 @@ export function PercussionToggle({ pattern, active, currentStep, volume, onToggl
       className={`percussion-row ${active ? 'active' : ''} ${isHit ? 'hit' : ''} ${volumeMode ? 'volume-mode' : ''}`}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      onContextMenu={e => e.preventDefault()}
     >
       <button
         className="percussion-toggle-btn"

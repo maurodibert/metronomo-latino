@@ -231,6 +231,10 @@ body {
   border-radius: var(--radius);
   padding: 10px 12px 10px 0;
   transition: border-color 0.15s, background 0.15s;
+  /* Prevenir selección de texto e iOS callout en long press */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .percussion-row.active {
