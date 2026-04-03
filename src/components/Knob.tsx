@@ -64,7 +64,8 @@ export function Knob({ value, onChange, size = 36 }: Props) {
       width={size}
       height={size}
       className="knob"
-      onMouseDown={e => { e.preventDefault(); onStart(e.clientY); }}
+      onMouseDown={e => { e.preventDefault(); e.stopPropagation(); onStart(e.clientY); }}
+      onClick={e => e.stopPropagation()}
       onTouchStart={e => onStart(e.touches[0].clientY)}
       style={{ cursor: 'ns-resize', flexShrink: 0, userSelect: 'none' }}
     >

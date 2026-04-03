@@ -12,7 +12,7 @@ interface Props {
 }
 
 const LONG_PRESS_MS = 380;
-const DRAG_RANGE_PX = 180; // px para recorrer el rango completo de volumen
+const DRAG_RANGE_PX = 180;
 
 export function PercussionToggle({ pattern, active, currentStep, volume, onToggle, onVolumeChange }: Props) {
   const isHit = active && pattern.steps[currentStep];
@@ -23,31 +23,26 @@ export function PercussionToggle({ pattern, active, currentStep, volume, onToggl
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   const startVolume = useRef(volume);
   const didLongPress = useRef(false);
-  const volumeModeRef = useRef(false); // ref para el listener nativo
+  const volumeModeRef = useRef(false);
 
-  // Sincronizar el ref con el estado
   useEffect(() => { volumeModeRef.current = volumeMode; }, [volumeMode]);
 
-  // Listener nativo con passive:false para poder prevenir scroll durante drag de volumen
+  // Listener nativo passive:false — necesario para preventDefault durante drag
   useEffect(() => {
     const el = rowRef.current;
     if (!el) return;
 
     const onTouchMove = (e: TouchEvent) => {
       if (!touchStart.current) return;
-
       const dx = e.touches[0].clientX - touchStart.current.x;
       const dy = Math.abs(e.touches[0].clientY - touchStart.current.y);
 
       if (volumeModeRef.current) {
-        e.preventDefault(); // evitar scroll mientras se arrastra el volumen
+        e.preventDefault();
         const newValue = Math.min(1, Math.max(0, startVolume.current + dx / DRAG_RANGE_PX));
         onVolumeChange(newValue);
-      } else {
-        // Si el usuario se mueve antes del long press, cancelarlo
-        if (Math.abs(dx) > 8 || dy > 8) {
-          if (timerRef.current) clearTimeout(timerRef.current);
-        }
+      } else if (Math.abs(dx) > 8 || dy > 8) {
+        if (timerRef.current) clearTimeout(timerRef.current);
       }
     };
 
@@ -55,11 +50,14 @@ export function PercussionToggle({ pattern, active, currentStep, volume, onToggl
     return () => el.removeEventListener('touchmove', onTouchMove);
   }, [onVolumeChange]);
 
+  const cancelTimer = () => {
+    if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null; }
+  };
+
   const handleTouchStart = (e: React.TouchEvent) => {
     didLongPress.current = false;
     touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     startVolume.current = volume;
-
     timerRef.current = setTimeout(() => {
       didLongPress.current = true;
       setVolumeMode(true);
@@ -67,13 +65,16 @@ export function PercussionToggle({ pattern, active, currentStep, volume, onToggl
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (timerRef.current) clearTimeout(timerRef.current);
+    cancelTimer();
+    if (!didLongPress.current) onToggle();
+    e.preventDefault();
+    setVolumeMode(false);
+    didLongPress.current = false;
+    touchStart.current = null;
+  };
 
-    if (!didLongPress.current) {
-      onToggle(); // tap corto = toggle
-    }
-
-    e.preventDefault(); // evita el click sintético que dispara el navegador tras touch
+  const handleTouchCancel = () => {
+    cancelTimer();
     setVolumeMode(false);
     didLongPress.current = false;
     touchStart.current = null;
@@ -84,20 +85,17 @@ export function PercussionToggle({ pattern, active, currentStep, volume, onToggl
   return (
     <div
       ref={rowRef}
+      role="button"
+      aria-pressed={active}
       className={`percussion-row ${active ? 'active' : ''} ${isHit ? 'hit' : ''} ${volumeMode ? 'volume-mode' : ''}`}
+      onClick={onToggle}              // desktop: click normal
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchCancel}
       onContextMenu={e => e.preventDefault()}
     >
-      <button
-        className="percussion-toggle-btn"
-        onClick={e => {
-          // En touch el toggle ya se maneja en handleTouchEnd;
-          // aquí solo responder a clicks de mouse (desktop)
-          if (e.detail !== 0) onToggle(); // detail===0 = evento sintético de touch
-        }}
-        aria-pressed={active}
-      >
+      {/* Div en lugar de button para evitar que iOS cancele el touch en long press */}
+      <div className="percussion-toggle-btn">
         <span className="percussion-label">{pattern.label}</span>
         <div className="step-grid">
           {pattern.steps.map((on, i) => (
@@ -107,7 +105,7 @@ export function PercussionToggle({ pattern, active, currentStep, volume, onToggl
             />
           ))}
         </div>
-      </button>
+      </div>
 
       {volumeMode
         ? <span className="vol-label">{volPercent}%</span>
