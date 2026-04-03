@@ -55,16 +55,32 @@ function triggerBeat(ctx: AudioContext, time: number, vol: number, accent: boole
 }
 
 function triggerClave(ctx: AudioContext, time: number, vol: number) {
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.frequency.setValueAtTime(1400, time);
-  osc.frequency.exponentialRampToValueAtTime(900, time + 0.04);
-  gain.gain.setValueAtTime(vol * 0.8, time);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.06);
-  osc.start(time);
-  osc.stop(time + 0.07);
+  // Transiente de ataque: noise burst muy corto ("toc" de madera)
+  triggerNoiseBurst(ctx, time, 0.006, vol * 0.35);
+
+  // Resonancia principal: tono agudo y seco, sin barrido de pitch
+  const osc1 = ctx.createOscillator();
+  const g1 = ctx.createGain();
+  osc1.connect(g1);
+  g1.connect(ctx.destination);
+  osc1.type = 'sine';
+  osc1.frequency.setValueAtTime(2200, time);
+  g1.gain.setValueAtTime(vol * 0.85, time);
+  g1.gain.exponentialRampToValueAtTime(0.001, time + 0.055);
+  osc1.start(time);
+  osc1.stop(time + 0.06);
+
+  // Armónico superior — carácter de madera
+  const osc2 = ctx.createOscillator();
+  const g2 = ctx.createGain();
+  osc2.connect(g2);
+  g2.connect(ctx.destination);
+  osc2.type = 'sine';
+  osc2.frequency.setValueAtTime(3700, time);
+  g2.gain.setValueAtTime(vol * 0.25, time);
+  g2.gain.exponentialRampToValueAtTime(0.001, time + 0.025);
+  osc2.start(time);
+  osc2.stop(time + 0.03);
 }
 
 function triggerConga(ctx: AudioContext, time: number, vol: number) {
