@@ -1,0 +1,320 @@
+/* ============================================
+   Metrónomo Latino — Estilos principales
+   Mobile-first, tema oscuro con acento rojo/dorado
+   ============================================ */
+
+:root {
+  --bg: #0f0f0f;
+  --surface: #1a1a1a;
+  --surface-2: #242424;
+  --accent: #c8102e;
+  --accent-2: #d4a017;
+  --text: #f0f0f0;
+  --text-muted: #888;
+  --hit: #ff3c5a;
+  --radius: 12px;
+  --font: 'Inter', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+}
+
+#root {
+  width: 100%;
+  max-width: 480px;
+}
+
+/* ---- App layout ---- */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 16px 40px;
+  min-height: 100dvh;
+}
+
+/* ---- Header ---- */
+
+.app-header {
+  text-align: center;
+}
+
+.app-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text);
+}
+
+.app-subtitle {
+  font-size: 0.9rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* ---- Pulse bar (4 tiempos) ---- */
+
+.pulse-bar {
+  display: flex;
+  gap: 12px;
+}
+
+.pulse-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 2px solid var(--surface-2);
+  transition: background 0.05s, border-color 0.05s, transform 0.05s;
+}
+
+.pulse-dot.pulse-active {
+  background: var(--accent);
+  border-color: var(--hit);
+  transform: scale(1.3);
+}
+
+/* ---- BPM Control ---- */
+
+.bpm-control {
+  width: 100%;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.bpm-display {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.bpm-number {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.bpm-label {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.bpm-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.bpm-btn {
+  background: var(--surface-2);
+  color: var(--text);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.bpm-btn:hover {
+  background: #333;
+}
+
+.bpm-slider {
+  flex: 1;
+  appearance: none;
+  height: 4px;
+  background: var(--surface-2);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.bpm-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.bpm-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* ---- Clave selector ---- */
+
+.clave-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.clave-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.clave-options {
+  display: flex;
+  gap: 6px;
+}
+
+.clave-btn {
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--surface-2);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.clave-btn.selected {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* ---- Percusiones ---- */
+
+.percussion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.percussion-btn {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--surface-2);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: left;
+}
+
+.percussion-btn.active {
+  border-color: var(--accent);
+  background: #1f1214;
+}
+
+.percussion-btn.hit {
+  background: #2a1016;
+}
+
+.percussion-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 60px;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+
+.percussion-btn.active .percussion-label {
+  color: var(--text);
+}
+
+/* ---- Step grid (mini visualizador) ---- */
+
+.step-grid {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 3px;
+  flex: 1;
+}
+
+.step {
+  height: 8px;
+  border-radius: 2px;
+  background: var(--surface-2);
+  transition: background 0.05s;
+}
+
+.step.step-on {
+  background: #555;
+}
+
+.percussion-btn.active .step.step-on {
+  background: var(--accent);
+  opacity: 0.6;
+}
+
+.step.step-current {
+  background: var(--hit) !important;
+  opacity: 1 !important;
+  transform: scaleY(1.4);
+}
+
+/* ---- Play button ---- */
+
+.play-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s, background 0.15s;
+  box-shadow: 0 4px 24px rgba(200, 16, 46, 0.4);
+  margin-top: 8px;
+}
+
+.play-btn:hover {
+  transform: scale(1.06);
+}
+
+.play-btn:active {
+  transform: scale(0.96);
+}
+
+.play-btn.playing {
+  background: #444;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
