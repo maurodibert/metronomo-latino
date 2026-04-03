@@ -20,14 +20,24 @@ export interface PercussionPattern {
   synthType: 'click' | 'conga' | 'bongo' | 'rimshot' | 'scrape' | 'bell';
 }
 
-// Clave 2-3: pasos 0, 3, 6, 10, 14
-// Clave 3-2: pasos 0, 4, 8, 11, 14 (espejada)
+// Son Clave — 5 golpes sobre 2 compases en corcheas (16 pasos)
+// Cada paso = 1 corchea: 0=t1, 1=t1+, 2=t2, 3=t2+, 4=t3, 5=t3+, 6=t4, 7=t4+ (x2 compases)
+//
+// 3-2: 3 golpes en compás 1, 2 golpes en compás 2
+//   Compás 1: t1(0), t2+(3), t4(6)
+//   Compás 2: t1+(9), t3(12)
+//   Pasos: [0, 3, 6, 9, 12]
+//
+// 2-3: 2 golpes en compás 1, 3 golpes en compás 2 (= 3-2 empezando en compás 2)
+//   Compás 1: t1+(1), t3(4)
+//   Compás 2: t1(8), t2+(11), t4(14)
+//   Pasos: [1, 4, 8, 11, 14]
 export function getClavePattern(type: ClaveType): boolean[] {
   const steps = Array(16).fill(false);
-  if (type === '2-3') {
-    [0, 3, 6, 10, 14].forEach(i => (steps[i] = true));
+  if (type === '3-2') {
+    [0, 3, 6, 9, 12].forEach(i => (steps[i] = true));
   } else {
-    [0, 4, 8, 11, 14].forEach(i => (steps[i] = true));
+    [1, 4, 8, 11, 14].forEach(i => (steps[i] = true));
   }
   return steps;
 }
