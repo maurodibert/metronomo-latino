@@ -177,7 +177,9 @@ body {
 .clave-selector {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .clave-label {
@@ -209,6 +211,24 @@ body {
   background: var(--accent);
   color: white;
   border-color: var(--accent);
+}
+
+.recommended-btn {
+  background: transparent;
+  color: var(--accent-2);
+  border: 1px solid var(--accent-2);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.3px;
+}
+
+.recommended-btn:hover {
+  background: var(--accent-2);
+  color: #000;
 }
 
 /* ---- Percusiones ---- */

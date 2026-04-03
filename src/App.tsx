@@ -73,6 +73,12 @@ export default function App() {
     setVolumes(prev => ({ ...prev, [id]: v }));
   }, []);
 
+  const applyRecommended = useCallback(() => {
+    setBpm(174);
+    setClaveType('3-2');
+    setActivePercussions(new Set(['beat', 'clave', 'conga', 'timbal']));
+  }, []);
+
   useEffect(() => {
     return () => schedulerRef.current?.stop();
   }, []);
@@ -107,6 +113,9 @@ export default function App() {
             </button>
           ))}
         </div>
+        <button className="recommended-btn" onClick={applyRecommended}>
+          Recomendada
+        </button>
       </div>
 
       <div className="percussion-list">
