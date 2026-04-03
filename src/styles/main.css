@@ -43,7 +43,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 24px;
-  padding: 24px 16px 40px;
+  padding: 24px 16px 120px; /* espacio para el botón fijo */
   min-height: 100dvh;
 }
 
@@ -305,9 +305,13 @@ body {
   transform: scaleY(1.4);
 }
 
-/* ---- Play button ---- */
+/* ---- Play button (flotante) ---- */
 
 .play-btn {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 72px;
   height: 72px;
   border-radius: 50%;
@@ -321,18 +325,35 @@ body {
   justify-content: center;
   transition: transform 0.1s, background 0.15s;
   box-shadow: 0 4px 24px rgba(200, 16, 46, 0.4);
-  margin-top: 8px;
+  z-index: 100;
 }
 
 .play-btn:hover {
-  transform: scale(1.06);
+  transform: translateX(-50%) scale(1.06);
 }
 
 .play-btn:active {
-  transform: scale(0.96);
+  transform: translateX(-50%) scale(0.96);
 }
 
 .play-btn.playing {
   background: #444;
   box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+/* ---- Volume mode ---- */
+
+.percussion-row.volume-mode {
+  border-color: var(--accent-2);
+  background: #1a1a0f;
+}
+
+.vol-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-2);
+  width: 36px;
+  text-align: center;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
 }
