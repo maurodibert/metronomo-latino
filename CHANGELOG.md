@@ -49,5 +49,15 @@ Versiones siguiendo [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PAT
 
 ---
 
+## [1.0.2] — 2026-04-04
+
+### Agregado
+- Botón **Recomendada** junto al selector de clave: aplica 174 BPM, clave 3-2, activa Beat + Clave + Conga + Timbal
+
+### Corregido
+- Síntesis de clave: reemplazado sweep de pitch descendente (sonaba a bombo) por dos senos fijos (2200 Hz + 3700 Hz armónico) con decay de 55ms — sonido seco de madera
+
+---
+
 ## [Unreleased]
 <!-- Agregar aquí los cambios del próximo release antes de taggear -->
