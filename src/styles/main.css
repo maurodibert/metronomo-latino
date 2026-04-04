@@ -36,6 +36,75 @@ body {
   max-width: 480px;
 }
 
+/* ---- Genre Select (home) ---- */
+
+.genre-select {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 48px 16px 40px;
+  min-height: 100dvh;
+}
+
+.genre-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+}
+
+.genre-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-2);
+  border-radius: 16px;
+  padding: 24px 12px 20px;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  color: var(--text);
+  font-family: var(--font);
+}
+
+.genre-card:hover {
+  border-color: var(--accent);
+  background: #1f1214;
+}
+
+.genre-card:active {
+  transform: scale(0.97);
+  border-color: var(--accent);
+}
+
+.genre-card-emoji {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.genre-card-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.genre-card-desc {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.genre-card-tempo {
+  font-size: 0.72rem;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
 /* ---- App layout ---- */
 
 .app {
@@ -51,6 +120,30 @@ body {
 
 .app-header {
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: color 0.15s, background 0.15s;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 36px;
+}
+
+.back-btn:hover {
+  color: var(--text);
+  background: var(--surface);
 }
 
 .app-title {

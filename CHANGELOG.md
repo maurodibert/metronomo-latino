@@ -59,5 +59,22 @@ Versiones siguiendo [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PAT
 
 ---
 
+## [1.1.0] — 2026-04-04
+
+### Agregado
+- **Pantalla home** de selección de género: Salsa, Merengue, Bachata, Cha-cha-chá
+- **Merengue** — patrones de Güira, Tambora, Conga, Cencerro. Grid de 16 semicorcheas (1 compás). Tempo: 120–160 BPM
+- **Bachata** — patrones de Bongó, Güira, Bajo (síncopa en 2+). Grid de 16 corcheas (2 compases). Tempo: 120–140 BPM
+- **Cha-cha-chá** — patrones de Clave (2-3 propia), Güiro, Campana, Timbal, Conga. Grid de 16 corcheas (2 compases). Tempo: 100–130 BPM
+- Botón de volver (←) desde el metrónomo al selector de género
+- `genres.ts` — sistema unificado de configuración de géneros con `stepDuration` por género
+
+### Cambiado
+- El scheduler ahora acepta `stepDuration: 'eighth' | 'sixteenth'` para adaptar el timing según el género
+- `PercussionPattern.id` pasó de tipo `PercussionId` a `string` para soportar múltiples géneros
+- El selector de clave (2-3 / 3-2) y el botón Recomendada ahora aparecen solo en Salsa
+
+---
+
 ## [Unreleased]
 <!-- Agregar aquí los cambios del próximo release antes de taggear -->

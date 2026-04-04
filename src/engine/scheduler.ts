@@ -13,6 +13,7 @@ export interface SchedulerState {
   volumes: Record<string, number>;
   patterns: PercussionPattern[];
   onBeat: (step: number) => void;
+  stepDuration: 'eighth' | 'sixteenth'; // 'eighth'=corchea (30/bpm), 'sixteenth'=semicorchea (15/bpm)
 }
 
 export class MetronomeScheduler {
@@ -58,11 +59,10 @@ export class MetronomeScheduler {
   }
 
   private secondsPerStep(): number {
-    // Un paso = una corchea = 60/(bpm*2) segundos ... pero trabajamos en 16 steps = 2 compases
-    // Un compás de 4/4 a N bpm = 4 * (60/N) segundos
-    // 2 compases = 8 * (60/N) = 480/N segundos para 16 pasos
-    // Por paso: 480/N / 16 = 30/N
-    return 30 / this.state.bpm;
+    // 'eighth'    → corchea    = 30/bpm  (16 pasos = 2 compases de 4/4)
+    // 'sixteenth' → semicorchea = 15/bpm (16 pasos = 1 compás  de 4/4)
+    const multiplier = this.state.stepDuration === 'sixteenth' ? 15 : 30;
+    return multiplier / this.state.bpm;
   }
 
   private schedule() {

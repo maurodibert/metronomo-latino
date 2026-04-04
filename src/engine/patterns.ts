@@ -2,23 +2,19 @@
 // La clave de salsa es el patrón base de 2 compases (8 tiempos / 16 corcheas)
 // Cada índice representa una corchea: 0=tiempo1, 1=tiempo1+, 2=tiempo2, etc.
 
+export type SynthType = 'beat' | 'click' | 'conga' | 'bongo' | 'rimshot' | 'scrape' | 'bell';
+
+// PercussionId solo aplica a Salsa (para referencias específicas)
 export type PercussionId =
-  | 'beat'
-  | 'clave'
-  | 'conga'
-  | 'bongo'
-  | 'timbal'
-  | 'guiro'
-  | 'campana';
+  | 'beat' | 'clave' | 'conga' | 'bongo' | 'timbal' | 'guiro' | 'campana';
 
 export type ClaveType = '2-3' | '3-2';
 
 export interface PercussionPattern {
-  id: PercussionId;
+  id: string; // string para soportar múltiples géneros
   label: string;
   steps: boolean[];
-  // Para síntesis: tipo de sonido
-  synthType: 'beat' | 'click' | 'conga' | 'bongo' | 'rimshot' | 'scrape' | 'bell';
+  synthType: SynthType;
 }
 
 // Son Clave estándar — 5 golpes sobre 2 compases en corcheas (16 pasos)
@@ -119,6 +115,6 @@ export function buildPatterns(claveType: ClaveType): PercussionPattern[] {
 
   return DEFAULT_PATTERNS.map(p => ({
     ...p,
-    steps: stepsMap[p.id],
+    steps: stepsMap[p.id as PercussionId],
   }));
 }
